@@ -1,0 +1,146 @@
+INSERT INTO departments (dept_no, dept_name)
+VALUES 
+	('d001', 'Marketing'),
+	('d002', 'Finance'),
+	('d003', 'Human_Resources'),
+	('d004', 'production'),
+	('d005', 'development'),
+	('d006', 'Quality_Management'),
+	('d007', 'Sales'),
+	('d008', 'Research'),
+	('d009','Customer_Service')
+;
+
+
+
+INSERT INTO departments (dept_no, dept_name)
+VALUES 
+	('d001', 'Marketing'),
+	('d002', 'Finance'),
+	('d003', 'Human Resources'),
+	('d004', 'production'),
+	('d005', 'development'),
+	('d006', 'Quality Management'),
+	('d007', 'Sales'),
+	('d008', 'Research'),
+	('d009','Customer Service')
+;
+
+
+TRUNCATE TABLE departments 
+SELECT *
+FROM  departments 
+
+ALTER TABLE dept_emp ADD CONSTRAINT compdept
+PRIMARY KEY (emp_no, dept_no);
+
+SELECT compdept
+FROM dept_emp
+
+/* 1, List the employee number, last name, first name, sex, 
+and salary of each employee.*/
+
+SELECT employees.emp_no, last_name, first_name, sex, salary
+FROM employees INNER JOIN salaries
+				ON CAST (employees.emp_no AS integer) = salaries.emp_no
+				--LIMIT 10
+/* 2, List the first name, last name, and hire date 
+for the employees who were hired in 1986.*/
+
+SELECT *  
+FROM employees 
+WHERE EXTRACT(YEAR FROM hire_date) = '1986'
+LIMIT 10
+				
+				
+/*
+3, List the manager of each department along with their department 
+number, department name, employee number, last name, and first name.
+*/
+
+SELECT d.dept_no, d.dept_name, e.emp_no, last_name, first_name
+FROM dept_manager AS dm INNER JOIN employees AS e
+				  ON CAST (e.emp_no AS integer) = dm.emp_no
+				  INNER JOIN departments AS d
+				  ON dm.dept_no = d.dept_no
+
+
+/*SELECT dept_emp.dept_no, dept_name, dept_emp.emp_no, last_name, employees.first_name
+FROM employees INNER JOIN dept_emp
+						ON employees.emp_no = dept_emp.emp_no
+						INNER JOIN departments
+						ON dept_emp.dept_no = departments.dept_no
+						
+						--GROUP BY dept_emp.dept_no, dept_name, dept_emp.emp_no, last_name, employees.first_name
+						ORDER BY 1
+						--dept_name, dept_emp.dept_no, dept_name, dept_emp.emp_no, last_name, employees.first_name
+						--, dept_emp.emp_no, last_name, employees.first_name, dept_emp.dept_no
+				--GROUP BY dept_emp.dept_no, dept_name, dept_emp.emp_no, last_name, employees.first_name
+		---LIMIT 10
+		
+SELECT *
+FROM employees INNER JOIN dept_emp
+						ON employees.emp_no = dept_emp.emp_no
+						INNER JOIN departments
+						ON dept_emp.dept_no = departments.dept_no
+						GROUP BY dept_emp.dept_no
+
+SELECT *
+FROM dept_manager AS dm LEFT JOIN departments AS d
+						ON dm.dept_no = d.dept_no
+						LEFT JOIN dept_emp AS de
+						ON d.dept_no = de.dept_no
+						RIGHT JOIN employees AS e
+						ON de.emp_no = e.emp_no
+						ORDER BY 1
+						LIMIT 10
+						*/
+						
+						
+/* 4, List the department number for each employee along with that employee’s 
+employee number, last name, first name, and department name.
+- table nedded employees, dept_emp, department
+*/
+
+SELECT e.emp_no, last_name, first_name, de.dept_no, dept_name
+FROM employees as e INNER JOIN dept_emp AS de
+					ON e.emp_no = de.emp_no
+					JOIN departments AS d
+					ON de.dept_no = d.dept_no
+					LIMIT 10
+					
+/*
+5, List first name, last name, and sex of each employee whose first name is 
+Hercules and whose last name begins with the letter B.
+
+*/
+SELECT first_name, last_name, sex
+FROM employees
+WHERE first_name = 'Hercules' 
+		AND last_name LIKE 'B%';
+
+/*6, 
+List each employee in the Sales department, 
+including their employee number, last name, and first name.
+*/
+
+SELECT e.emp_no, last_name, first_name
+FROM employees AS e INNER JOIN dept_emp AS de
+			   ON e.emp_no = de.emp_no
+			   INNER JOIN departments AS d
+			   ON de.dept_no = d.dept_no
+			WHERE dept_name = 'Sales'
+			   
+/*
+7, List each employee in the Sales and Development departments, 
+including their employee number, last name, first name, and department name.
+*/
+SELECT e.emp_no, last_name, first_name, dept_name
+FROM employees as e INNER JOIN dept_emp AS de
+					ON e.emp_no = de.emp_no
+					JOIN departments AS d
+					ON de.dept_no = d.dept_no
+			WHERE dept_name = 'Sales' OR dept_name = 'Development'
+			
+	
+			
